@@ -1,7 +1,7 @@
 from copy import deepcopy
 from board import Board
 from consoleView import ConsoleView
-from tkinterView import TkinterView
+#from tkinterView import TkinterView
 
 import sys
 
