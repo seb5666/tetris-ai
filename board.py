@@ -203,7 +203,8 @@ class Board:
         self.next_pieces.append(self.randomPiece())
 
     def removeFilledRows(self):
-        for i in range(self.height):
+        #check from the top so that we don't skip rows when they fall due to something dissapearing below
+        for i in range(self.height-1,-1,-1):
             row = self.board[i]
             full = True
             for block in row:
@@ -212,7 +213,7 @@ class Board:
                     break
             if full:
                 if self.debug:
-                    print "Removing row ", row
+                    print "Removing row ", i , " " , row
                 self.points += 1
                 self.board.remove(row)
                 self.board.append([0 for j in range(self.width)])
