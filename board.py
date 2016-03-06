@@ -1,11 +1,11 @@
 import random
-import threading
-import time
 from copy import deepcopy
+from boardthread import BoardThread
 
+#TODO: there might be some race condition between making the current piece fall and moving the piece due to user input...
+#This should be fixable by adding a mutex, but not sure if actually needed. CHECK THIS!
 
 # Set to true for more debug information
-
 class Board:
     # O piece
     # x x
@@ -59,17 +59,16 @@ class Board:
     # actual board matrix, from bottom to top, so row 0 is the bottom most row and row (height-1) is the topmost row
     board = []
 
-    # views
+    # views, to display and interact with the board (normally only one?)
     views = []
 
-    # height of the piece already layed down
-	# won't work because you can have gaps...
-    # currentLayout = [ 0 for i in range(width)]
 
-    # constructor, if fileName is set read initial board from the given filename
+    # constructor, 
+    #if fileName is set read initial board from the given filename
+    #debug is a flag for additional debug print statements
     def __init__(self, width=10, height=20, turnTime=2, fileName=None, debug=False):
 
-        self.debug = debug
+        self.debug = debug #debug flag
         self.height = height
         self.width = width
         self.turnTime = turnTime
@@ -105,32 +104,34 @@ class Board:
         self.piece_row = self.height - 1 + len(self.current_piece) - 1
         self.piece_column = max((self.width / 2) - (len(self.current_piece[0]) / 2), 0)
 
+    def notify(self):
+        for view in self.views:
+            view.notify()
+
     def addView(self, view):
         self.views.append(view)
 
-    def testThread(self, x):
-        while True:
-            for i in range(100):
-                pass
-            # do nothing
-            print x
+    def removeView(self, view):
+        self.views.remove(view)
 
     def start(self):
         self.is_game_over = False
+        #start the board thread that makes the current block fall
         thread1 = BoardThread(self)
         thread1.daemon = True
         thread1.start()
 
-        # make the piece fall, starting from the top middle
-        while not (self.is_game_over):
-            user_in = raw_input()
-            if user_in == 'l' or user_in == 'a':
-                self.moveLeft()
-            elif user_in == 'r' or user_in == 'd':
-                self.moveRight()
-            elif user_in == 'rot' or user_in == 's':
-                self.rotate()
-            self.notify()
+        # # make the piece fall, starting from the top middle
+        # while not (self.is_game_over):
+        #     user_in = raw_input()
+        #     if user_in == 'l' or user_in == 'a':
+        #         self.moveLeft()
+        #     elif user_in == 'r' or user_in == 'd':
+        #         self.moveRight()
+        #     elif user_in == 'rot' or user_in == 's':
+        #         self.rotate()
+        #     self.notify()
+        print "Hello"
 
     # Methods to be called from the views/controllers
 
@@ -146,6 +147,11 @@ class Board:
         if self.canMoveDown():
             self.piece_row -= 1
 
+    def cascadeDown(self):
+        while self.canMoveDown():
+            self.piece_row -= 1
+        self.fixPiece()
+
     def rotate(self):
         if self.canRotate():
             print self.piece_row, self.piece_column
@@ -153,11 +159,10 @@ class Board:
             print self.piece_row, self.piece_column
 
     # Private methods
-
     def canMoveDown(self):
         return self.isValidMove(self.current_piece, self.piece_row - 1, self.piece_column)
 
-    # IMPROVEMENT: be able to rotate the 7 (I piece) in this case
+    # IMPROVEMENT/BUG: be able to rotate the 7 (I piece) in this case
     # ~ ~ ~ ~ ~ ~
     # ~ ~ ~ ~ ~ ~
     # ~ ~ 7 7 7 7
@@ -184,6 +189,12 @@ class Board:
         return rotated_piece
 
     def fixPiece(self):
+        self.attachPiece()
+        self.removeFilledRows()
+        self.nextPiece()
+
+    #attaches the currently falling piece to the board.
+    def attachPiece(self):
         for i in range(len(self.current_piece)):
             row = self.current_piece[i]
             for j in range(len(row)):
@@ -258,58 +269,7 @@ class Board:
                             return False
         return True
 
-    def notify(self):
-        for view in self.views:
-            view.notify()
-
-        # #print the board to the console
-        # def printBoard(self):
-        # 	for i in range(self.height):
-        # 		if self.debug:
-        # 			print self.height-i-1,
-        # 		for j in range(self.width):
-        # 			if self.height-i-1 <= self.piece_row and self.height-i-1 > self.piece_row - len(self.current_piece) and j >= self.piece_column  and j < self.piece_column + len(self.current_piece[0]):
-        # 				x = (self.height-i-1) - self.piece_row
-        # 				y = j - self.piece_column
-        # 				if self.current_piece[x][y] > 0:
-        # 					print self.current_piece[x][y],
-        # 				else:
-        # 					print self.board[self.height-i-1][j],
-        # 			else:
-        # 				print self.board[self.height-i-1][j],
-        # 		print ""
-        # 	if self.debug:
-        # 		print " ",
-        # 		for j in range(self.width):
-        # 			print j,
-        # 		print ""
-
-
-class BoardThread(threading.Thread):
-    def __init__(self, board):
-        super(BoardThread, self).__init__()
-        self.board = board
-
-    def run(self):
-        while True:
-            time.sleep(self.board.turnTime)
-            self.board.notify()
-            if self.board.canMoveDown():
-                self.board.piece_row -= 1
-            else:
-                if self.board.debug:
-                    print "reached bottom"
-                # fix piece to the board
-                self.board.fixPiece()
-
-                # check if any rows have been filled
-                self.board.removeFilledRows()
-
-                # check if game is over
-                if self.board.piece_row >= self.board.height:
-                    break
-
-                # add a new piece
-                self.board.nextPiece()
-        print "Game over, press enter to exit"
-        self.board.is_game_over = True
+    #replace if debug statements by something like this methood
+    def printDebug(self, message):
+        if self.debug:
+            print message

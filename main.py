@@ -5,14 +5,8 @@ from consoleView import ConsoleView
 
 import sys
 
-
-# O piece
-# [
-# 	[1,1],
-# 	[1,1]
-# ]
-
 # uses assertions for now..
+# TODO test methods don't work anymore... Change to a proper testing framework and write some real unit tests...
 def testBoard():
     board = Board(fileName='test/board1')
     board.printBoard()
@@ -43,7 +37,7 @@ def testBoard():
     print "L piece at ", col, ",", height, " is False"
     assert board.isValidMove('l', height, col) == False
 
-
+#TODO write proper unit tests for the board class
 def testRotation():
     board = Board()
     for piece in board.pieces:
@@ -61,14 +55,11 @@ def testRotation():
 
 
 def play():
-    board = Board()
-    view = ConsoleView(board)
-    #view2 = TkinterView(board)
-    board.addView(view)
-    #board.addView(view2)
-    board.start()
+    board = Board(turnTime=1, width=8, height=15)
+    game = ConsoleView(board)
 
 
+#TODO write a proper command line interface...
 if (len(sys.argv) > 1):
     if sys.argv[1] == 'test':
         testRotation()

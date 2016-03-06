@@ -2,6 +2,24 @@ class ConsoleView():
 
     def __init__(self,board):
         self.board = board
+        self.board.addView(self)
+        self.board.start()
+        self.listenToInput()
+
+    def listenToInput(self):
+        while not (self.board.is_game_over):
+            user_in = raw_input()
+            if user_in == 'l' or user_in == 'a':
+                self.board.moveLeft()
+            elif user_in == 'r' or user_in == 'd':
+                self.board.moveRight()
+            elif user_in == 'rot' or user_in == 's':
+                self.board.rotate()
+            elif user_in == 'down' or user_in == 'w':
+                self.board.cascadeDown()
+            #update the view to include the move
+            self.notify()
+
 
     def notify(self):
         print "Next pieces: TODO"
