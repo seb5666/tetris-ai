@@ -27,5 +27,5 @@ class BoardThread(threading.Thread):
                 # fix piece to the board
                 self.board.fixPiece()
 
-        print "Game over, press enter to exit"
+        print("Game over, press enter to exit")
         self.board.is_game_over = True

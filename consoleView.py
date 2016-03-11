@@ -9,7 +9,7 @@ class ConsoleView():
 
     def listenToInput(self):
         while not (self.board.is_game_over):
-            user_in = raw_input()
+            user_in = input()
             if user_in == 'l' or user_in == 'a':
                 self.board.moveLeft()
             elif user_in == 'r' or user_in == 'd':
@@ -26,11 +26,11 @@ class ConsoleView():
         self.print_board()
 
     def print_board(self):
-        print "Next pieces: TODO"
-        print "Points:", self.board.points
+        print("Next pieces: TODO")
+        print("Points:", self.board.points)
         for i in range(self.board.height):
             if self.board.debug:
-                print self.board.height - i - 1,
+                print(self.board.height - i - 1),
             for j in range(self.board.width):
                 if self.board.height - i - 1 <= self.board.piece_row and \
                         self.board.height - i - 1 > self.board.piece_row - len(self.board.current_piece) and\
@@ -39,21 +39,21 @@ class ConsoleView():
                     x = self.board.piece_row - (self.board.height - i - 1)
                     y = j - self.board.piece_column
                     if self.board.current_piece[x][y] > 0:
-                        print self.board.current_piece[x][y],
+                        print(self.board.current_piece[x][y], end=''),
                     else:
                         if (self.board.board[self.board.height - i - 1][j]) == 0:
-                            print '~',
+                            print('~', end=''),
                         else:
-                            print self.board.board[self.board.height - i - 1][j],
+                            print(self.board.board[self.board.height - i - 1][j], end=''),
                 else:
                     if (self.board.board[self.board.height - i - 1][j]) == 0:
-                        print '~',
+                        print('~', end=''),
                     else:
-                        print self.board.board[self.board.height - i - 1][j],
-            print ""
+                        print(self.board.board[self.board.height - i - 1][j], end=''),
+            print("")
 
         if self.board.debug:
-            print " ",
+            print(" "),
             for j in range(self.board.width):
-                print j,
-            print ""
+                print(j),
+            print(""),

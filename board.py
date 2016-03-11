@@ -64,7 +64,7 @@ class Board:
 
 
     #if fileName is set read initial board from the given filename
-    #debug is a flag for additional debug print statements
+    #debug is a flag for additional debug print(statements)
     def __init__(self, width=10, height=20, turnTime=2, fileName=None, debug=False):
 
         self.debug = debug #debug flag
@@ -92,7 +92,7 @@ class Board:
                 line = file.readline()
             self.height = len(self.board)
             self.widht = len(self.board[0])
-            print "Board read from file", fileName, "with height", self.height, "and width", self.width
+            print("Board read from file", fileName, "with height", self.height, "and width", self.width)
 
         self.points = 0
         # fill in the next pieces queue initially
@@ -101,7 +101,7 @@ class Board:
             self.next_pieces.append(self.randomPiece())
 
         self.piece_row = self.height - 1 + len(self.current_piece) - 1
-        self.piece_column = max((self.width / 2) - (len(self.current_piece[0]) / 2), 0)
+        self.piece_column = int(max((self.width / 2) - (len(self.current_piece[0]) / 2), 0))
 
     def notify(self):
         for view in self.views:
@@ -152,9 +152,9 @@ class Board:
 
     def rotate(self):
         if self.canRotate():
-            print self.piece_row, self.piece_column
+            print(self.piece_row, self.piece_column)
             self.current_piece = self.rotatePiece(self.current_piece)
-            print self.piece_row, self.piece_column
+            print(self.piece_row, self.piece_column)
 
     # Private methods
     def canMoveDown(self):
@@ -201,12 +201,12 @@ class Board:
                     if self.piece_row - i < self.height:  # needed so that the last piece gets added even if only partially
                         self.board[self.piece_row - i][self.piece_column + j] = block
                         if self.debug:
-                            print self.piece_row - i, ",", self.piece_column + j, "is now", block
+                            print(self.piece_row - i, ",", self.piece_column + j, "is now", block)
 
     def nextPiece(self):
         self.current_piece = self.next_pieces[0]
         self.piece_row = self.height - 1 + len(self.current_piece)
-        self.piece_column = max((self.width / 2) - (len(self.current_piece[0]) / 2), 0)
+        self.piece_column = int(max((self.width / 2) - (len(self.current_piece[0]) / 2), 0))
 
         self.next_pieces = self.next_pieces[1:]
         self.next_pieces.append(self.randomPiece())
@@ -222,7 +222,7 @@ class Board:
                     break
             if full:
                 if self.debug:
-                    print "Removing row ", i , " " , row
+                    print("Removing row ", i , " " , row)
                 self.points += 1
                 self.board.remove(row)
                 self.board.append([0 for j in range(self.width)])
@@ -239,11 +239,11 @@ class Board:
         # left and right checks are trivial, just need to check the border of the piece against the borders of the board
         if column < 0:  # left side outside the left border of the board
             if self.debug:
-                print "left bound"
+                print("left bound")
             return False
         if column + len(piece[0]) - 1 >= self.width:  # right side outside the right border of the board
             if self.debug:
-                print "right bound"
+                print("right bound")
             return False
 
         # top check is not needed sine a piece can never go back up
@@ -251,7 +251,7 @@ class Board:
         # check if it has reached the bottom row
         if height - (len(piece) - 1) < 0:
             if self.debug:
-                print "bottom bound"
+                print("bottom bound")
             return False
 
         # to check the piece against the current layout we need to check each block
@@ -263,11 +263,11 @@ class Board:
                     if height - i < self.height:
                         if self.board[height - i][column + j] > 0:
                             if self.debug:
-                                print "Overlap at row ", height - i, " and column ", column + j
+                                print("Overlap at row ", height - i, " and column ", column + j)
                             return False
         return True
 
     #replace if debug statements by something like this methood
     def printDebug(self, message):
         if self.debug:
-            print message
+            print(message)

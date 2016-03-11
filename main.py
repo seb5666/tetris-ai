@@ -1,7 +1,6 @@
 from copy import deepcopy
 from board import Board
 from consoleView import ConsoleView
-from qlearner import QLearner
 #from tkinterView import TkinterView
 
 import sys
@@ -49,7 +48,7 @@ def testRotation():
         p4 = board.rotatePiece(p3)
         for row in p1:
             for block in row:
-                print(block,
+                print(block),
             print("")
         print("")
         assert p4 == p
@@ -67,7 +66,7 @@ def play_ai():
 if (len(sys.argv) > 1):
     if sys.argv[1] == 'test':
         testRotation()
-    if sys.argv[1] == 'qlearner':
-        play_ai()
+#     if sys.argv[1] == 'qlearner':
+#         play_ai()
 else:        
  play()
