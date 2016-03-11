@@ -63,7 +63,6 @@ class Board:
     views = []
 
 
-    # constructor, 
     #if fileName is set read initial board from the given filename
     #debug is a flag for additional debug print statements
     def __init__(self, width=10, height=20, turnTime=2, fileName=None, debug=False):
@@ -131,7 +130,6 @@ class Board:
         #     elif user_in == 'rot' or user_in == 's':
         #         self.rotate()
         #     self.notify()
-        print "Hello"
 
     # Methods to be called from the views/controllers
 

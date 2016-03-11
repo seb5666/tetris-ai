@@ -1,6 +1,7 @@
 from copy import deepcopy
 from board import Board
 from consoleView import ConsoleView
+from qlearner import QLearner
 #from tkinterView import TkinterView
 
 import sys
@@ -55,12 +56,18 @@ def testRotation():
 
 
 def play():
-    board = Board(turnTime=1, width=8, height=15)
+    board = Board(turnTime=1, width=5, height=10)
     game = ConsoleView(board)
+
+def play_ai():
+    game = QLearner()
 
 
 #TODO write a proper command line interface...
 if (len(sys.argv) > 1):
     if sys.argv[1] == 'test':
         testRotation()
-play()
+    if sys.argv[1] == 'qlearner':
+        play_ai()
+else:        
+ play()

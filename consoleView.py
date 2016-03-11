@@ -1,10 +1,11 @@
 class ConsoleView():
 
-    def __init__(self,board):
+    def __init__(self,board, input=True):
         self.board = board
         self.board.addView(self)
         self.board.start()
-        self.listenToInput()
+        if input:
+            self.listenToInput()
 
     def listenToInput(self):
         while not (self.board.is_game_over):
@@ -22,6 +23,9 @@ class ConsoleView():
 
 
     def notify(self):
+        self.print_board()
+
+    def print_board(self):
         print "Next pieces: TODO"
         print "Points:", self.board.points
         for i in range(self.board.height):
