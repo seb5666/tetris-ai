@@ -29,7 +29,7 @@ def testRotation():
 
 
 def play():
-    board = Board(turnTime=1, width=6, height=10)
+    board = Board(turnTime=1, width=6)
     game = ConsoleView(board)
 
 def play_ai():

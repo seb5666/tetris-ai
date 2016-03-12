@@ -47,6 +47,8 @@ class Board:
     num_next_pieces = 4
     next_pieces = []
 
+    number_of_deaths = 0
+
     # actual board matrix, from bottom to top, so row 0 is the bottom most row and row (height-1) is the topmost row
     board = []
 
@@ -139,6 +141,7 @@ class Board:
         else:
             if self.piece_row >= self.height:
                 self.is_game_over = True
+                self.number_of_deaths += 1
             self.fixPiece()
             return False
 
@@ -148,9 +151,7 @@ class Board:
 
     def rotate(self):
         if self.canRotate():
-            print(self.piece_row, self.piece_column)
             self.current_piece = self.rotatePiece(self.current_piece)
-            print(self.piece_row, self.piece_column)
 
     # Private methods
     def canMoveDown(self):
@@ -222,7 +223,7 @@ class Board:
             if full:
                 if self.debug:
                     print("Removing row ", i , " " , row)
-                self.points += 1
+                self.points += 2
                 self.board.remove(row)
                 self.board.append([0 for j in range(self.width)])
 
