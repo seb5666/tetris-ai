@@ -121,6 +121,7 @@ class Board:
         #         self.rotate()
         #     self.notify()
 
+        print("fix")
     # Methods to be called from the views/controllers
 
     def moveRight(self):
@@ -134,14 +135,17 @@ class Board:
     def moveDown(self):
         if self.canMoveDown():
             self.piece_row -= 1
+            return True
         else:
+            print("bottom")
             if self.piece_row >= self.height:
                 self.is_game_over = True
             self.fixPiece()
+            return False
 
     def cascadeDown(self):
-        while self.canMoveDown():
-            self.moveDown()
+        while self.moveDown():
+            pass
 
     def rotate(self):
         if self.canRotate():
