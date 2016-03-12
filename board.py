@@ -121,7 +121,6 @@ class Board:
         #         self.rotate()
         #     self.notify()
 
-        print("fix")
     # Methods to be called from the views/controllers
 
     def moveRight(self):
