@@ -10,32 +10,6 @@ import sys
 def testBoard():
     board = Board(fileName='test/board1')
     board.printBoard()
-    print("")
-
-    col = 4
-    height = 8
-    print("O piece at ", col, ",", height, " is True")
-    assert board.isValidMove('o', height, col) == True
-
-    col = 5
-    height = 9
-    print("O piece at ", col, ",", height, " is False")
-    assert board.isValidMove('o', height, col) == False
-
-    col = 2
-    height = 9
-    print("I piece at ", col, ",", height, " is True")
-    assert board.isValidMove('i', height, col) == True
-
-    col = 3
-    height = 9
-    print("I piece at ", col, ",", height, " is False")
-    assert board.isValidMove('i', height, col) == False
-
-    col = 1
-    height = 5
-    print("L piece at ", col, ",", height, " is False")
-    assert board.isValidMove('l', height, col) == False
 
 #TODO write proper unit tests for the board class
 def testRotation():
@@ -55,7 +29,7 @@ def testRotation():
 
 
 def play():
-    board = Board(turnTime=1, width=5, height=10)
+    board = Board(turnTime=1, width=6, height=10)
     game = ConsoleView(board)
 
 def play_ai():

@@ -91,7 +91,7 @@ class Board:
                 self.board.insert(0, row[:])
                 line = file.readline()
             self.height = len(self.board)
-            self.widht = len(self.board[0])
+            self.width = len(self.board[0])
             print("Board read from file", fileName, "with height", self.height, "and width", self.width)
 
         self.points = 0
@@ -99,9 +99,7 @@ class Board:
         self.current_piece = self.randomPiece()
         for i in range(self.num_next_pieces):
             self.next_pieces.append(self.randomPiece())
-
-        self.piece_row = self.height - 1 + len(self.current_piece) - 1
-        self.piece_column = int(max((self.width / 2) - (len(self.current_piece[0]) / 2), 0))
+        self.nextPiece()
 
     def notify(self):
         for view in self.views:
@@ -206,7 +204,7 @@ class Board:
     def nextPiece(self):
         self.current_piece = self.next_pieces[0]
         self.piece_row = self.height - 1 + len(self.current_piece)
-        self.piece_column = int(max((self.width / 2) - (len(self.current_piece[0]) / 2), 0))
+        self.piece_column = 0
 
         self.next_pieces = self.next_pieces[1:]
         self.next_pieces.append(self.randomPiece())
