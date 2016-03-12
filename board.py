@@ -142,11 +142,14 @@ class Board:
     def moveDown(self):
         if self.canMoveDown():
             self.piece_row -= 1
+        else:
+            if self.piece_row >= self.height:
+                self.is_game_over = True
+            self.fixPiece()
 
     def cascadeDown(self):
         while self.canMoveDown():
-            self.piece_row -= 1
-        self.fixPiece()
+            self.moveDown()
 
     def rotate(self):
         if self.canRotate():

@@ -9,23 +9,12 @@ class BoardThread(threading.Thread):
 
     def run(self):
         self.board.notify()
-        while True:
+        while not self.board.is_game_over:
             #wait the given amount of time
             time.sleep(self.board.turnTime)
             #notify the views to update the board
             self.board.notify() 
-            if self.board.canMoveDown():
-                self.board.piece_row -= 1
-            else:
-                if self.board.debug:
-                    print("reached bottom")
-                
-                #check if game is over
-                if self.board.piece_row >= self.board.height:
-                    break
-
-                # fix piece to the board
-                self.board.fixPiece()
+            self.board.moveDown()
 
         print("Game over, press enter to exit")
         self.board.is_game_over = True
