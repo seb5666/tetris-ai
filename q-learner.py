@@ -1,5 +1,5 @@
 from board import Board
-
+from copy import deepcopy
 trim_limit = 3
 
 def encode_board(board):
@@ -42,6 +42,16 @@ def get_piece_type(board):
     return 0
 
 b = Board(fileName='test/board1')
+
+# Calculate the rotation map
+piece_array = []
+for piece in b.pieces:
+    for i in range(4):
+        piece = deepcopy(piece)
+        if piece not in piece_array:
+            piece_array.append(piece)
+        piece = b.rotatePiece(deepcopy(piece))
+
 b.start()
 for row in b.board:
     print(row)
