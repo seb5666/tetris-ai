@@ -2,6 +2,23 @@ from board import Board
 from copy import deepcopy
 trim_limit = 3
 
+# Calculate the rotation map
+b = Board(fileName='test/board1')
+
+b.start()
+number_of_board_states = 7 ** b.width
+available_actions = [ 'w', 'a', 's', 'd' ]
+
+piece_array = []
+for piece in b.pieces:
+    for i in range(4):
+        piece = deepcopy(piece)
+        if piece not in piece_array:
+            piece_array.append(piece)
+        piece = b.rotatePiece(deepcopy(piece))
+
+q_values = [[[[0 for action in range(len(available_actions))] for column in range(b.width)] for piece_type in range(len(piece_array))] for board_state in range(number_of_board_states)]
+
 def encode_board(board):
     total = 0
     multiplier = 1
@@ -16,12 +33,11 @@ def encode_board(board):
             difference = trim_limit
         # Scale up to {0, 1, 2, ..., 6}
         difference += trim_limit
-        print(difference)
         total += multiplier * difference
         # print(total)
         multiplier *= 7
         last_height = height
-    print(total)
+    return total
 
 # Returns the current state of the board in our representation
 def get_heights(board):
@@ -31,34 +47,14 @@ def get_heights(board):
             if board[i][j] > 0:
                 heights[j] = i + 1
                 break
-    print(heights)
     return heights
 
 def get_piece_type(board):
-    for row in board.current_piece:
-        for block in row:
-            if block != 0:
-                return block
-    return 0
+    return piece_array.index(board.current_piece)
 
-b = Board(fileName='test/board1')
-
-# Calculate the rotation map
-piece_array = []
-for piece in b.pieces:
-    for i in range(4):
-        piece = deepcopy(piece)
-        if piece not in piece_array:
-            piece_array.append(piece)
-        piece = b.rotatePiece(deepcopy(piece))
-
-b.start()
-for row in b.board:
-    print(row)
-# print(b.board)
-number_of_board_states = 7 ** b.width
-print(number_of_board_states)
+# for row in b.board:
+#     print(row)
+# print(number_of_board_states)
 print(encode_board(b.board))
 print(get_piece_type(b))
 print(b.piece_column)
-available_actions = [ 'w', 'a', 's', 'd' ]
