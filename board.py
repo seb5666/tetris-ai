@@ -104,6 +104,7 @@ class Board:
 
     def start(self):
         self.is_game_over = False
+        self.reset_board()
         #start the board thread that makes the current block fall
         if not self.freeze_time:
             thread1 = BoardThread(self)
@@ -137,7 +138,6 @@ class Board:
             self.piece_row -= 1
             return True
         else:
-            print("bottom")
             if self.piece_row >= self.height:
                 self.is_game_over = True
             self.fixPiece()
@@ -207,6 +207,9 @@ class Board:
 
         self.next_pieces = self.next_pieces[1:]
         self.next_pieces.append(self.randomPiece())
+    
+    def reset_board(self):
+        self.board = [[0 for i in range(self.width)] for j in range(self.height)]
 
     def removeFilledRows(self):
         #check from the top so that we don't skip rows when they fall due to something dissapearing below
