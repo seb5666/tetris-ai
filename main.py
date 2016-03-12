@@ -35,7 +35,6 @@ def play():
 def play_ai():
     game = QLearner()
 
-
 #TODO write a proper command line interface...
 if (len(sys.argv) > 1):
     if sys.argv[1] == 'test':
@@ -43,4 +42,4 @@ if (len(sys.argv) > 1):
 #     if sys.argv[1] == 'qlearner':
 #         play_ai()
 else:        
- play()
+    play()

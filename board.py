@@ -47,15 +47,6 @@ class Board:
     num_next_pieces = 4
     next_pieces = []
 
-    # position of the current piece that is falling down, relative to the top right corner of its matrix
-    current_piece = None
-    piece_row = 0
-    piece_column = 0
-
-    # size of the board
-    width = 6
-    height = 10
-
     # actual board matrix, from bottom to top, so row 0 is the bottom most row and row (height-1) is the topmost row
     board = []
 
@@ -65,13 +56,13 @@ class Board:
 
     #if fileName is set read initial board from the given filename
     #debug is a flag for additional debug print(statements)
-    def __init__(self, width=10, height=20, turnTime=2, fileName=None, debug=False):
-
+    def __init__(self, width=10, height=20, turnTime=2, fileName=None, debug=False, freeze_time=True):
         self.debug = debug #debug flag
         self.height = height
         self.width = width
         self.turnTime = turnTime
         self.board = board = [[0 for j in range(self.width)] for i in range(self.height)]
+        self.freeze_time = freeze_time
 
         # read initial board from file
         if fileName != None:
@@ -114,9 +105,10 @@ class Board:
     def start(self):
         self.is_game_over = False
         #start the board thread that makes the current block fall
-        thread1 = BoardThread(self)
-        thread1.daemon = True
-        thread1.start()
+        if not self.freeze_time:
+            thread1 = BoardThread(self)
+            thread1.daemon = True
+            thread1.start()
 
         # # make the piece fall, starting from the top middle
         # while not (self.is_game_over):
