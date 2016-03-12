@@ -1,3 +1,4 @@
+from copy import deepcopy
 class ConsoleView():
 
     def __init__(self,board, input=True):
@@ -25,7 +26,7 @@ class ConsoleView():
     def notify(self):
         self.print_board()
 
-    def print_board(self):
+    def print_board2(self):
         print("Next pieces: TODO")
         print("Points:", self.board.points)
         for i in range(self.board.height):
@@ -57,3 +58,26 @@ class ConsoleView():
             for j in range(self.board.width):
                 print(j),
             print(""),
+
+    def print_board(self):
+        print("Next pieces: TODO")
+        print("Points:", self.board.points)
+        board = deepcopy(self.board.board)
+        height = self.board.piece_row
+        column = self.board.piece_column
+        for i in range(len(self.board.current_piece)):
+            row = self.board.current_piece[i]
+            for j in range(len(row)):
+                block = row[j]
+                if height-i < self.board.height and column+j < self.board.width:
+                    if block > 0:
+                        board[height-i][column+j] = block
+        board.reverse()
+        for row in board:
+            for block in row:
+                if block == 0:
+                    print('~', end='')
+                else:
+                    print(block, end='')
+            print("")
+
