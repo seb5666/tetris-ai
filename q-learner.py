@@ -1,6 +1,7 @@
 from board import Board
 from copy import deepcopy
 import random
+import math
 trim_limit = 3
 
 b = Board(height=10, width=5)
@@ -20,9 +21,8 @@ available_actions = [ 'w', 'a', 's', 'd' ]
 
 class QLearner:
     points_at_last_check = 0
-    epsilon = 0.05
     death_punishment = -5.0
-    inactivity_punishment = -0.5
+    inactivity_punishment = -1.0
     learning_rate = 1.0
     discount_factor = 0.99
     q_values = [[[[0 for action in range(len(available_actions))] for column in range(b.width)] for piece_type in range(len(piece_array))] for board_state in range(number_of_board_states)]
@@ -72,10 +72,18 @@ class QLearner:
 
         action_rewards = self.q_values[board_state][piece_type][piece_column]
 
-        if random.random() < self.epsilon:
-            action_index = random.randint(0, 3)
-        else:
-            action_index = self.arg_max(action_rewards)
+        exp_action_rewards = [math.exp(reward) for reward in action_rewards]
+        cumulative_sum = self.get_cumulative_sum(exp_action_rewards)
+
+        random_num = random.random() * cumulative_sum[-1]
+        action_index = 0
+        while True:
+            if action_index == len(exp_action_rewards) - 1:
+                break
+            elif random_num > cumulative_sum[action_index]:
+                action_index += 1
+            else:
+                break
 
         action = available_actions[action_index]
 
@@ -97,6 +105,12 @@ class QLearner:
         old_q_value = self.q_values[board_state][piece_type][piece_column][action_index]
         learned_value = reward + self.discount_factor * optimal_future_value
         self.q_values[board_state][piece_type][piece_column][action_index] = old_q_value + self.learning_rate * (learned_value - old_q_value)
+
+    def get_cumulative_sum(self, list_to_sum):
+        cumulative_list = [ ]
+        for i, x in enumerate(list_to_sum):
+            cumulative_list.append(x if i == 0 else cumulative_list[i - 1] + x)
+        return cumulative_list
 
     def play_optimally(self, board):
         board_state = self.encode_board(board.board)
